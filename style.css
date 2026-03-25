@@ -409,8 +409,9 @@ body {
   .rot-btn  { width: 58px; height: 42px; font-size: 1.3rem; color: var(--magenta); border-color: rgba(204,0,255,0.3); }
   .rot-btn.pressed { background: rgba(204,0,255,0.15); box-shadow: 0 0 12px rgba(204,0,255,0.4); }
 
-  .hold-btn { width: 58px; height: 42px; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--yellow); border-color: rgba(255,224,0,0.3); }
+  .hold-btn { width: 50px; height: 36px; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--yellow); border-color: rgba(255,224,0,0.3); }
   .hold-btn.pressed { background: rgba(255,224,0,0.12); }
+  .hold-btn.hold-used { opacity: 0.3; border-color: rgba(255,224,0,0.1); }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
@@ -541,8 +542,9 @@ body {
   .rot-btn  { width: 68px; height: 50px; font-size: 1.5rem; color: var(--magenta); border-color: rgba(204,0,255,0.3); }
   .rot-btn.pressed  { background: rgba(204,0,255,0.15); box-shadow: 0 0 14px rgba(204,0,255,0.4); }
 
-  .hold-btn { width: 68px; height: 50px; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--yellow); border-color: rgba(255,224,0,0.3); }
+  .hold-btn { width: 58px; height: 42px; font-size: 0.65rem; letter-spacing: 0.08em; color: var(--yellow); border-color: rgba(255,224,0,0.3); }
   .hold-btn.pressed { background: rgba(255,224,0,0.12); }
+  .hold-btn.hold-used { opacity: 0.3; border-color: rgba(255,224,0,0.1); }
 }
 
 /* ── Desktop small screen scale (only for true desktop) ──────────────────── */

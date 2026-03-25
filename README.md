@@ -14,10 +14,14 @@ Fully responsive: works on **desktop**, **tablet**, and **mobile**.
 - **Hold piece** — swap the current piece (C / HOLD button)
 - **7-bag randomizer** — fair piece distribution
 - **DAS/ARR** — smooth delayed auto-shift for horizontal movement
-- **Leveling system** — speed increases every 10 lines
+- **Leveling system** — speed increases every 10 lines cleared
+- **Time-based difficulty** — forced level-up every 60 seconds regardless of lines
 - **High score** — persisted in `localStorage`
 - **AI autoplay** — heuristic-based AI that plays the game automatically
 - **Screen shake** on line clears (scales with number of lines)
+- **Particle effects** — color burst on line clears, flash on piece lock
+- **Level-up flash** — canvas overlay with "LEVEL UP!" on timed progression
+- **Sound effects** — Web Audio API (rotate, drop, lock, line clear, hold, level up, game over)
 - **Responsive design** — adapts to desktop, tablet, and mobile screens
 - **Touch gamepad** — full on-screen controls for tablet and mobile
 

@@ -54,6 +54,81 @@ const DROP_MS = [0,800,650,500,400,300,220,160,120,100,80,70,60,55,50,45,40,38,3
 const AI_W    = { h: -0.51, lines: 0.76, holes: -0.36, bumpy: -0.18 };
 const AI_STEP_MS = 75;
 const DAS = 167, ARR = 33, LOCK_DELAY = 500;
+const TIME_LEVEL_MS = 60000; // forced level-up every 60 seconds
+
+// ── Audio (Web Audio API — zero external files) ────────────────────────────────
+let audioCtx = null;
+function ensureAudio() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  } catch(e) {}
+}
+function tone(freq, type, startOff, dur, vol, freqEnd) {
+  if (!audioCtx) return;
+  try {
+    const ac = audioCtx, t = ac.currentTime + startOff;
+    const osc = ac.createOscillator(), g = ac.createGain();
+    osc.connect(g); g.connect(ac.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t);
+    if (freqEnd) osc.frequency.exponentialRampToValueAtTime(freqEnd, t + dur);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    osc.start(t); osc.stop(t + dur + 0.06);
+  } catch(e) {}
+}
+const sfxRotate   = () => tone(440, 'square', 0, 0.05, 0.04);
+const sfxHold     = () => { tone(320,'triangle',0,0.09,0.07); tone(500,'triangle',0.06,0.08,0.05); };
+const sfxDrop     = () => tone(100, 'sawtooth', 0, 0.14, 0.10, 55);
+const sfxLock     = () => tone(180, 'square', 0, 0.07, 0.06, 90);
+const sfxGameOver = () => [440,349,294,247,196].forEach((f,i) => tone(f,'sawtooth',i*0.11,0.22,0.09));
+const sfxLevelUp  = () => [523,659,784,1047].forEach((f,i) => tone(f,'sine',i*0.09,0.20,0.14));
+function sfxLineClear(n) {
+  const m = [[523,659,784],[587,740,880],[659,831,988,1175],[698,880,1047,1319,1568]];
+  (m[n-1] || m[0]).forEach((f,i) => tone(f,'sine',i*0.055,0.16,0.12));
+}
+
+// ── Particles ─────────────────────────────────────────────────────────────────
+const particles = [];
+function spawnClearParticles(row, colors) {
+  for (let c = 0; c < COLS; c++) {
+    const col = colors[c] || '#00f5ff';
+    for (let k = 0; k < 5; k++)
+      particles.push({ x:(c+Math.random())*BLOCK, y:(row+Math.random())*BLOCK,
+        vx:(Math.random()-0.5)*8, vy:-Math.random()*6-1,
+        col, life:1, decay:0.024+Math.random()*0.022, r:2+Math.random()*3.5 });
+  }
+}
+function spawnLockParticles(piece) {
+  const m = mat(piece), col = PIECE_COLOR[piece.type];
+  for (let r = 0; r < m.length; r++)
+    for (let c = 0; c < m[r].length; c++)
+      if (m[r][c] && piece.y + r >= 0)
+        for (let k = 0; k < 2; k++)
+          particles.push({ x:(piece.x+c+Math.random())*BLOCK, y:(piece.y+r+Math.random())*BLOCK,
+            vx:(Math.random()-0.5)*2, vy:(Math.random()-0.5)*2,
+            col:'#ffffff', life:0.65, decay:0.09, r:BLOCK*0.28 });
+}
+function updateParticles(dt) {
+  const s = dt / 16;
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx*s; p.y += p.vy*s; p.vy += 0.28*s; p.life -= p.decay*s;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+}
+function renderParticles() {
+  for (const p of particles) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.life) * 0.85;
+    ctx.fillStyle = ctx.shadowColor = p.col;
+    ctx.shadowBlur = p.r * 2;
+    ctx.fillRect(p.x - p.r/2, p.y - p.r/2, p.r, p.r);
+    ctx.restore();
+  }
+}
 
 // ── Canvas / context references ───────────────────────────────────────────────
 const $ = id => document.getElementById(id);
@@ -109,7 +184,7 @@ window.addEventListener('orientationchange', resizeCanvases);
 let board, cur, nextPc, heldPc, bag;
 let score, level, totalLines, hiScore;
 let started, over, paused, holdUsed;
-let dropTimer, lastTs, shakeFrames, shakeMag;
+let dropTimer, lastTs, shakeFrames, shakeMag, gameElapsed, levelFlashTimer;
 let lockActive, lockTimer;
 let aiOn = false, aiStepTimer = 0, aiTgtRot, aiTgtX;
 const keys  = {};
@@ -165,6 +240,7 @@ function tryRot(dir) {
     if (!hits(m, cur.x + dx, cur.y - dy)) {
       cur.x += dx; cur.y -= dy; cur.rot = to;
       lockActive = false; lockTimer = 0;
+      sfxRotate();
       return true;
     }
   }
@@ -181,17 +257,20 @@ function hardDrop() {
   let n = 0;
   while (!hits(mat(cur), cur.x, cur.y + 1)) { cur.y++; n++; }
   score += n * 2;
+  sfxDrop();
   lock();
 }
 
 function doHold() {
   if (holdUsed) return;
   holdUsed = true;
+  sfxHold();
   const type = cur.type;
   if (heldPc) { cur = mkPiece(heldPc.type); }
   else { cur = nextPc; nextPc = mkPiece(pullBag()); }
   heldPc = { type };
   dropTimer = 0; lockActive = false; lockTimer = 0;
+  updateHoldBtn();
   if (aiOn) planAI();
 }
 
@@ -204,11 +283,18 @@ function lock() {
         if (cur.y + r < 0) { endGame(); return; }
         board[cur.y + r][cur.x + c] = PIECE_COLOR[cur.type];
       }
+  sfxLock();
+  spawnLockParticles(cur);
   clearLines();
   spawn();
 }
 
 function clearLines() {
+  // Capture row colors BEFORE clearing (for particle burst)
+  const cleared = [];
+  for (let r = ROWS - 1; r >= 0; r--)
+    if (board[r].every(v => v)) cleared.push({ y: r, colors: [...board[r]] });
+
   let n = 0;
   for (let r = ROWS - 1; r >= 0; r--) {
     if (board[r].every(v => v)) {
@@ -216,6 +302,9 @@ function clearLines() {
     }
   }
   if (!n) return;
+
+  cleared.forEach(({ y, colors }) => spawnClearParticles(y, colors));
+  sfxLineClear(n);
   score += SCORE_TABLE[n] * level;
   totalLines += n;
   level = Math.floor(totalLines / LINES_PER_LV) + 1;
@@ -226,12 +315,14 @@ function clearLines() {
 function spawn() {
   cur = nextPc; nextPc = mkPiece(pullBag());
   holdUsed = false; dropTimer = 0; lockActive = false; lockTimer = 0;
+  updateHoldBtn();
   if (hits(mat(cur), cur.x, cur.y)) { endGame(); return; }
   if (aiOn) planAI();
 }
 
 function endGame() {
   over = true;
+  sfxGameOver();
   if (score > hiScore) { hiScore = score; localStorage.setItem('neon_hi', hiScore); }
   showOverlay('GAME OVER', 'Score: ' + score.toLocaleString() + '\nTAP to restart');
 }
@@ -298,6 +389,19 @@ function dropInterval() { return DROP_MS[Math.min(level, DROP_MS.length - 1)]; }
 function update(dt) {
   if (!started || over || paused) return;
   aiStep(dt);
+
+  // Time-based level progression: +1 level every 60 seconds
+  const prevIntervals = Math.floor(gameElapsed / TIME_LEVEL_MS);
+  gameElapsed += dt;
+  if (Math.floor(gameElapsed / TIME_LEVEL_MS) > prevIntervals) {
+    level++;
+    levelFlashTimer = 1800;
+    sfxLevelUp();
+    shakeMag = 5; shakeFrames = 12;
+    updateHUD();
+  }
+  if (levelFlashTimer > 0) levelFlashTimer = Math.max(0, levelFlashTimer - dt);
+  updateParticles(dt);
 
   if (!aiOn && dasDir !== 0) {
     dasTimer += dt;
@@ -396,6 +500,25 @@ function render() {
 
   ctx.restore();
 
+  renderParticles();
+
+  // Level-up flash overlay
+  if (levelFlashTimer > 0) {
+    const t = levelFlashTimer / 1800;
+    ctx.save();
+    ctx.globalAlpha = t * 0.12;
+    ctx.fillStyle = '#00f5ff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = Math.min(1, t * 2.5);
+    ctx.fillStyle = '#00f5ff';
+    ctx.shadowColor = '#00f5ff';
+    ctx.shadowBlur = 22;
+    ctx.font = `bold ${Math.max(13, Math.floor(BLOCK * 0.85))}px 'Courier New',monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText('LEVEL UP!', canvas.width / 2, canvas.height / 2);
+    ctx.restore();
+  }
+
   // Desktop mini previews
   drawMini(nCtx, nextPc ? nextPc.type : null);
   drawMini(hCtx, heldPc ? heldPc.type : null);
@@ -405,6 +528,11 @@ function render() {
 }
 
 // ── HUD ───────────────────────────────────────────────────────────────────────
+function updateHoldBtn() {
+  const btn = $('btn-hold');
+  if (btn) btn.classList.toggle('hold-used', holdUsed);
+}
+
 function updateHUD() {
   const sc = score.toLocaleString();
   const hi = hiScore.toLocaleString();
@@ -434,6 +562,7 @@ function init() {
   over = false; paused = false; holdUsed = false; heldPc = null;
   shakeFrames = 0; shakeMag = 0; dropTimer = 0;
   lockActive = false; lockTimer = 0; aiStepTimer = 0; touchSoft = false;
+  gameElapsed = 0; levelFlashTimer = 0; particles.length = 0;
   hiScore = parseInt(localStorage.getItem('neon_hi') || '0');
   nextPc = mkPiece(pullBag());
   spawn();
@@ -441,6 +570,7 @@ function init() {
 }
 
 function startGame() {
+  ensureAudio();
   init(); started = true; hideOverlay();
   if (aiOn) planAI();
 }
@@ -518,6 +648,10 @@ function bindTouchBtn(id, onPress, onRelease) {
   };
   el.addEventListener('touchend',    up, { passive: false });
   el.addEventListener('touchcancel', up, { passive: false });
+  // Mouse / pointer fallback (desktop testing, stylus)
+  el.addEventListener('click', () => {
+    if (started && !over && !paused && !aiOn) onPress();
+  });
 }
 
 // ── Touch buttons ─────────────────────────────────────────────────────────────
