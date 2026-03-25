@@ -301,11 +301,41 @@ body {
     background: rgba(0,0,0,0.4);
   }
 
-  #ai-toggle-m {
-    padding: 6px 10px;
-    font-size: 0.65rem;
-    white-space: nowrap;
+  .mhud-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
     flex-shrink: 0;
+  }
+
+  #ai-toggle-m {
+    padding: 5px 8px;
+    font-size: 0.6rem;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .pause-m-btn {
+    font-family: var(--font);
+    font-size: 0.85rem;
+    font-weight: bold;
+    width: 100%;
+    padding: 4px 8px;
+    background: rgba(0, 0, 20, 0.8);
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: all 0.15s ease;
+  }
+
+  .pause-m-btn:active {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-color: rgba(255,255,255,0.5);
   }
 
   /* ── Container: only shows canvas ────────────────── */
@@ -461,7 +491,37 @@ body {
     background: rgba(0,0,0,0.4);
   }
 
-  #ai-toggle-m { padding: 8px 14px; font-size: 0.7rem; white-space: nowrap; flex-shrink: 0; }
+  .mhud-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  #ai-toggle-m { padding: 7px 12px; font-size: 0.68rem; white-space: nowrap; width: 100%; }
+
+  .pause-m-btn {
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: bold;
+    width: 100%;
+    padding: 5px 12px;
+    background: rgba(0, 0, 20, 0.8);
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: all 0.15s ease;
+  }
+
+  .pause-m-btn:active {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-color: rgba(255,255,255,0.5);
+  }
 
   /* ── Container: center the canvas ───────────────── */
   #container {

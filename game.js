@@ -528,6 +528,11 @@ function render() {
 }
 
 // ── HUD ───────────────────────────────────────────────────────────────────────
+function updatePauseBtn() {
+  const btn = $('btn-pause');
+  if (btn) btn.textContent = paused ? '▶' : '⏸';
+}
+
 function updateHoldBtn() {
   const btn = $('btn-hold');
   if (btn) btn.classList.toggle('hold-used', holdUsed);
@@ -599,8 +604,9 @@ document.addEventListener('keydown', e => {
   }
   if (e.code === 'KeyP') {
     paused = !paused;
-    if (paused) showOverlay('PAUSED', 'P to resume');
+    if (paused) showOverlay('PAUSED', 'TAP  ·  P to resume');
     else hideOverlay();
+    updatePauseBtn();
     return;
   }
   if (paused || aiOn) return;
@@ -676,11 +682,25 @@ bindTouchBtn('btn-hold', () => doHold());
 const aiToggleM = $('ai-toggle-m');
 if (aiToggleM) aiToggleM.addEventListener('click', toggleAI);
 
+// ── Mobile/Tablet pause button ────────────────────────────────────────────────
+function togglePause() {
+  if (!started || over) return;
+  paused = !paused;
+  if (paused) showOverlay('PAUSED', 'TAP  ·  P to resume');
+  else hideOverlay();
+  updatePauseBtn();
+}
+const pauseBtn = $('btn-pause');
+if (pauseBtn) {
+  pauseBtn.addEventListener('touchstart', e => { e.preventDefault(); togglePause(); }, { passive: false });
+  pauseBtn.addEventListener('click', togglePause);
+}
+
 // ── Overlay tap (mobile start / resume) ───────────────────────────────────────
 $('overlay').addEventListener('touchstart', e => {
   e.preventDefault();
   if (!started || over) startGame();
-  else if (paused) { paused = false; hideOverlay(); }
+  else if (paused) { paused = false; hideOverlay(); updatePauseBtn(); }
 }, { passive: false });
 
 // ── Canvas swipe gestures (alternative mobile controls) ───────────────────────
@@ -705,7 +725,7 @@ $('overlay').addEventListener('touchstart', e => {
     e.preventDefault();
     // Overlay is on top when game not running — let overlay handler deal with it
     if (!started || over) return;
-    if (paused) { paused = false; hideOverlay(); return; }
+    if (paused) { paused = false; hideOverlay(); updatePauseBtn(); return; }
     if (aiOn) return;
 
     const t = e.changedTouches[0];
@@ -741,6 +761,24 @@ const highMEl = $('high-m'); if (highMEl) highMEl.textContent = hiScore.toLocale
 resizeCanvases();
 updateHUD();
 showOverlay('TETRIS', 'TAP or SPACE to play');
+
+// ── iOS / Android Web Audio unlock ────────────────────────────────────────────
+// Mobile browsers suspend AudioContext until a direct user gesture plays audio.
+// Playing a 1-sample silent buffer on the first touch permanently unlocks it.
+function unlockAudio() {
+  ensureAudio();
+  if (audioCtx) {
+    try {
+      const buf = audioCtx.createBuffer(1, 1, 22050);
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      src.connect(audioCtx.destination);
+      src.start(0);
+    } catch(e) {}
+  }
+}
+document.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+document.addEventListener('click',      unlockAudio, { once: true, passive: true });
 
 // Main loop
 (function loop(ts) {
