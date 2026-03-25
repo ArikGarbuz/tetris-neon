@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>TETRIS — Neon Edition</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Mobile/Tablet top HUD ────────────────────────────── -->
+  <div id="mobile-hud">
+    <div class="mhud-stats">
+      <div class="mhud-stat">
+        <div class="label">SCORE</div>
+        <div id="score-m" class="mval cyan">0</div>
+      </div>
+      <div class="mhud-stat">
+        <div class="label">HIGH</div>
+        <div id="high-m" class="mval yellow">0</div>
+      </div>
+      <div class="mhud-stat">
+        <div class="label">LV</div>
+        <div id="level-m" class="mval magenta">1</div>
+      </div>
+      <div class="mhud-stat">
+        <div class="label">LINES</div>
+        <div id="lines-m" class="mval green">0</div>
+      </div>
+    </div>
+    <div class="mhud-previews">
+      <div class="mhud-mini">
+        <div class="label">NEXT</div>
+        <canvas id="next-m"></canvas>
+      </div>
+      <div class="mhud-mini">
+        <div class="label">HOLD</div>
+        <canvas id="hold-m"></canvas>
+      </div>
+    </div>
+    <button id="ai-toggle-m" class="ai-btn">AI</button>
+  </div>
+
+  <!-- ── Main layout (desktop 3-col, mobile just canvas) ── -->
+  <div id="container">
+
+    <div id="sidebar-left">
+      <div class="panel">
+        <div class="label">SCORE</div>
+        <div id="score" class="value cyan">0</div>
+      </div>
+      <div class="panel">
+        <div class="label">HIGH</div>
+        <div id="high-score" class="value yellow">0</div>
+      </div>
+      <div class="panel">
+        <div class="label">LEVEL</div>
+        <div id="level" class="value magenta">1</div>
+      </div>
+      <div class="panel">
+        <div class="label">LINES</div>
+        <div id="lines" class="value green">0</div>
+      </div>
+    </div>
+
+    <div id="game-area">
+      <canvas id="game-canvas"></canvas>
+      <div id="scanlines"></div>
+      <div id="overlay">
+        <div id="overlay-content">
+          <h1 id="overlay-title">TETRIS</h1>
+          <p id="overlay-message">TAP or SPACE to play</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="sidebar-right">
+      <div class="panel">
+        <div class="label">NEXT</div>
+        <canvas id="next-canvas"></canvas>
+      </div>
+      <div class="panel">
+        <div class="label">HOLD</div>
+        <canvas id="hold-canvas"></canvas>
+      </div>
+      <div class="panel controls-panel">
+        <div class="label">CONTROLS</div>
+        <div class="ctrl"><span>← →</span> Move</div>
+        <div class="ctrl"><span>↑ / X</span> Rotate CW</div>
+        <div class="ctrl"><span>Z</span> Rotate CCW</div>
+        <div class="ctrl"><span>↓</span> Soft Drop</div>
+        <div class="ctrl"><span>SPC</span> Hard Drop</div>
+        <div class="ctrl"><span>C</span> Hold</div>
+        <div class="ctrl"><span>P</span> Pause</div>
+      </div>
+      <button id="ai-toggle">AI: OFF</button>
+    </div>
+
+  </div>
+
+  <!-- ── Mobile-only touch gamepad ─────────────────────── -->
+  <div id="touch-controls">
+    <div id="touch-left">
+      <button id="btn-left"  class="tbtn">◀</button>
+      <button id="btn-soft"  class="tbtn soft-btn">▼</button>
+      <button id="btn-right" class="tbtn">▶</button>
+    </div>
+    <div id="touch-center">
+      <button id="btn-drop" class="tbtn drop-btn">⬇<span>DROP</span></button>
+    </div>
+    <div id="touch-right">
+      <button id="btn-ccw"  class="tbtn rot-btn">↺</button>
+      <button id="btn-cw"   class="tbtn rot-btn">↻</button>
+      <button id="btn-hold" class="tbtn hold-btn">HOLD</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
