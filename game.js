@@ -65,7 +65,7 @@ function ensureAudio() {
   } catch(e) {}
 }
 function tone(freq, type, startOff, dur, vol, freqEnd) {
-  if (!audioCtx) return;
+  if (!audioCtx || muted) return;
   try {
     const ac = audioCtx, t = ac.currentTime + startOff;
     const osc = ac.createOscillator(), g = ac.createGain();
@@ -185,6 +185,7 @@ let board, cur, nextPc, heldPc, bag;
 let score, level, totalLines, hiScore;
 let started, over, paused, holdUsed;
 let dropTimer, lastTs, shakeFrames, shakeMag, gameElapsed, levelFlashTimer;
+let muted = false;
 let lockActive, lockTimer;
 let aiOn = false, aiStepTimer = 0, aiTgtRot, aiTgtX;
 const keys  = {};
@@ -682,7 +683,7 @@ bindTouchBtn('btn-hold', () => doHold());
 const aiToggleM = $('ai-toggle-m');
 if (aiToggleM) aiToggleM.addEventListener('click', toggleAI);
 
-// ── Mobile/Tablet pause button ────────────────────────────────────────────────
+// ── Mobile/Tablet pause & mute buttons ───────────────────────────────────────
 function togglePause() {
   if (!started || over) return;
   paused = !paused;
@@ -690,11 +691,31 @@ function togglePause() {
   else hideOverlay();
   updatePauseBtn();
 }
-const pauseBtn = $('btn-pause');
-if (pauseBtn) {
-  pauseBtn.addEventListener('touchstart', e => { e.preventDefault(); togglePause(); }, { passive: false });
-  pauseBtn.addEventListener('click', togglePause);
+
+function updateMuteBtn() {
+  const btn = $('btn-mute');
+  if (btn) btn.textContent = muted ? '🔇' : '🔊';
 }
+
+// Debounced binder for HUD icon buttons — prevents touchstart+click double-fire
+function bindHudBtn(id, handler) {
+  const el = $(id);
+  if (!el) return;
+  let last = 0;
+  function onTap(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const now = Date.now();
+    if (now - last < 350) return;
+    last = now;
+    handler();
+  }
+  el.addEventListener('touchstart', onTap, { passive: false });
+  el.addEventListener('click',      onTap);
+}
+
+bindHudBtn('btn-pause', togglePause);
+bindHudBtn('btn-mute', () => { muted = !muted; updateMuteBtn(); });
 
 // ── Overlay tap (mobile start / resume) ───────────────────────────────────────
 $('overlay').addEventListener('touchstart', e => {
