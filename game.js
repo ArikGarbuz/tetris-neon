@@ -157,8 +157,8 @@ function calcBlock() {
     const byW = Math.floor(availW / COLS);
     return Math.max(Math.min(byH, byW, 40), 14);
   }
-  // Mobile: HUD ~56px + touch controls ~92px; side-drop ~64px
-  const availH = window.innerHeight - 56 - 92 - 10;
+  // Mobile: HUD ~56px + touch controls ~130px (inc. 1cm top pad); side-drop ~64px
+  const availH = window.innerHeight - 56 - 130 - 10;
   const availW = w - 64 - 4;
   const byH = Math.floor(availH / ROWS);
   const byW = Math.floor(availW / COLS);
