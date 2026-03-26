@@ -51,6 +51,7 @@
   </div>
 
   <!-- ── Main layout (desktop 3-col, mobile just canvas) ── -->
+  <div id="mobile-game-row">
   <div id="container">
 
     <div id="sidebar-left">
@@ -107,15 +108,18 @@
 
   </div>
 
+  <!-- ── Side drop button (mobile only) ───────────────────── -->
+  <div id="side-drop">
+    <button id="btn-drop" class="tbtn drop-btn">⬇<span>DROP</span></button>
+  </div>
+  </div><!-- end #mobile-game-row -->
+
   <!-- ── Mobile-only touch gamepad ─────────────────────── -->
   <div id="touch-controls">
     <div id="touch-left">
       <button id="btn-left"  class="tbtn">◀</button>
       <button id="btn-soft"  class="tbtn soft-btn">▼</button>
       <button id="btn-right" class="tbtn">▶</button>
-    </div>
-    <div id="touch-center">
-      <button id="btn-drop" class="tbtn drop-btn">⬇<span>DROP</span></button>
     </div>
     <div id="touch-right">
       <button id="btn-ccw"  class="tbtn rot-btn">↺</button>
