@@ -39,6 +39,10 @@ body {
 /* ── Touch controls (hidden on desktop) ───────────────────────────────────── */
 #touch-controls { display: none; }
 
+/* ── Mobile game row wrapper (flex on all, side-drop hidden on desktop) ────── */
+#mobile-game-row { display: flex; align-items: flex-start; }
+#side-drop { display: none; }
+
 /* ── Mobile/Tablet HUD value colors (shared across breakpoints) ────────────── */
 .mval.cyan    { color: var(--cyan);    text-shadow: 0 0 8px var(--cyan); }
 .mval.magenta { color: var(--magenta); text-shadow: 0 0 8px var(--magenta); }
@@ -345,6 +349,14 @@ body {
     width: 100%;
   }
 
+  /* ── Mobile game row: canvas + side drop ─────────── */
+  #mobile-game-row {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+  }
+
   /* ── Container: only shows canvas ────────────────── */
   #container {
     flex: 1;
@@ -354,12 +366,30 @@ body {
     min-height: 0;
   }
 
+  /* ── Side drop panel ─────────────────────────────── */
+  #side-drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 4cm; /* shifts button ~2cm above center */
+    width: 64px;
+    flex-shrink: 0;
+    background: rgba(0, 0, 20, 0.85);
+    border-left: 1px solid rgba(0,245,255,0.15);
+  }
+
+  #side-drop .drop-btn {
+    width: 52px;
+    height: auto;
+    max-height: 200px;
+    min-height: 90px;
+    font-size: 1.4rem;
+    border-radius: 12px;
+  }
+
   #sidebar-left,
   #sidebar-right { display: none; }
-
-  #game-area {
-    /* canvas is sized by JS — just center it */
-  }
 
   /* Overlay title smaller on mobile */
   #overlay-title { font-size: 2.2rem; }
@@ -370,7 +400,7 @@ body {
     flex-shrink: 0;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px 10px;
+    padding: 1cm 14px 12px; /* 1cm top padding pulls bar down */
     background: rgba(0, 0, 20, 0.85);
     border-top: 1px solid rgba(0,245,255,0.15);
     gap: 8px;
@@ -380,12 +410,6 @@ body {
     display: flex;
     gap: 8px;
     align-items: center;
-  }
-
-  #touch-center {
-    display: flex;
-    align-items: center;
-    margin: 0 6px;
   }
 
   #touch-right {
@@ -553,6 +577,14 @@ body {
 
   #ai-toggle-m { padding: 7px 12px; font-size: 0.68rem; white-space: nowrap; width: 100%; }
 
+  /* ── Tablet game row: canvas + side drop ────────── */
+  #mobile-game-row {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+  }
+
   /* ── Container: center the canvas ───────────────── */
   #container {
     flex: 1;
@@ -560,6 +592,27 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 0;
+  }
+
+  /* ── Side drop panel ─────────────────────────────── */
+  #side-drop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    flex-shrink: 0;
+    background: rgba(0, 0, 20, 0.85);
+    border-left: 1px solid rgba(0,245,255,0.15);
+  }
+
+  #side-drop .drop-btn {
+    width: 62px;
+    height: auto;
+    flex: 1;
+    max-height: 220px;
+    min-height: 110px;
+    font-size: 1.6rem;
+    border-radius: 14px;
   }
 
   #sidebar-left, #sidebar-right { display: none; }
@@ -572,14 +625,13 @@ body {
     flex-shrink: 0;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px 14px;
+    padding: 12px 20px 16px;
     background: rgba(0, 0, 20, 0.85);
     border-top: 1px solid rgba(0,245,255,0.15);
     gap: 10px;
   }
 
   #touch-left  { display: flex; gap: 8px; align-items: center; }
-  #touch-center { display: flex; align-items: center; }
   #touch-right {
     display: flex;
     gap: 8px;

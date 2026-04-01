@@ -161,16 +161,16 @@ function calcBlock() {
   const w = window.innerWidth;
   if (w > 1024) return 30; // Desktop: fixed block size
   if (w > 600) {
-    // Tablet: HUD ~64px + touch controls ~160px
-    const availH = window.innerHeight - 64 - 160 - 10;
-    const availW = w - 4;
+    // Tablet: HUD ~64px + touch controls ~110px; side-drop ~76px
+    const availH = window.innerHeight - 64 - 110 - 10;
+    const availW = w - 76 - 4;
     const byH = Math.floor(availH / ROWS);
     const byW = Math.floor(availW / COLS);
     return Math.max(Math.min(byH, byW, 40), 14);
   }
-  // Mobile: HUD ~56px + touch controls ~138px
-  const availH = window.innerHeight - 56 - 138 - 10;
-  const availW = w - 4;
+  // Mobile: HUD ~56px + touch controls ~130px (inc. 1cm top pad); side-drop ~64px
+  const availH = window.innerHeight - 56 - 130 - 10;
+  const availW = w - 64 - 4;
   const byH = Math.floor(availH / ROWS);
   const byW = Math.floor(availW / COLS);
   return Math.max(Math.min(byH, byW, 30), 14);
@@ -792,6 +792,7 @@ const highMEl = $('high-m'); if (highMEl) highMEl.textContent = hiScore.toLocale
 // Size canvases before first render
 resizeCanvases();
 updateHUD();
+updateMuteBtn();
 showOverlay('TETRIS', 'TAP or SPACE to play');
 
 // ── iOS / Android Web Audio unlock ────────────────────────────────────────────
