@@ -56,6 +56,17 @@ const AI_STEP_MS = 75;
 const DAS = 167, ARR = 33, LOCK_DELAY = 500;
 const TIME_LEVEL_MS = 60000; // forced level-up every 60 seconds
 
+// ── Haptic feedback ────────────────────────────────────────────────────────────
+function haptic(ms) {
+  if ('vibrate' in navigator) navigator.vibrate(ms);
+}
+function hapticTap()     { haptic(12); }
+function hapticRotate()  { haptic([8, 10, 12]); }
+function hapticDrop()    { haptic([10, 15, 20]); }
+function hapticLock()    { haptic([15, 20, 15]); }
+function hapticClear()   { haptic([20, 10, 20, 10, 20]); }
+function hapticGameOver(){ haptic([30, 50, 30, 50, 30]); }
+
 // ── Audio (Web Audio API — zero external files) ────────────────────────────────
 let audioCtx = null;
 function ensureAudio() {

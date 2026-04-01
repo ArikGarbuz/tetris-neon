@@ -378,45 +378,55 @@ body {
 
   #touch-left {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
   }
 
   #touch-center {
     display: flex;
     align-items: center;
+    margin: 0 6px;
   }
 
   #touch-right {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-end;
     align-items: center;
-    width: 130px;
+    width: 140px;
   }
 
   /* ── Touch buttons ──────────────────────────────── */
+  #touch-controls { padding: 10px 10px 12px; }
+
   .tbtn {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 58px;
-    height: 58px;
+    width: 66px;
+    height: 66px;
     font-family: var(--font);
     font-size: 1.5rem;
     line-height: 1;
     background: rgba(0, 0, 40, 0.8);
     color: var(--cyan);
-    border: 1px solid rgba(0,245,255,0.3);
-    border-radius: 10px;
+    border: 2px solid rgba(0,245,255,0.3);
+    border-radius: 12px;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    transition: background 0.08s, box-shadow 0.08s;
+    transition: all 0.06s cubic-bezier(0.2, 0, 0.8, 1);
     user-select: none;
     -webkit-user-select: none;
+    tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  .tbtn:hover {
+    background: rgba(0, 40, 60, 0.9);
+    border-color: rgba(0,245,255,0.5);
   }
 
   .tbtn span {
@@ -428,27 +438,33 @@ body {
 
   .tbtn.pressed,
   .tbtn:active {
-    background: rgba(0, 245, 255, 0.18);
-    box-shadow: 0 0 14px rgba(0,245,255,0.5);
+    background: rgba(0, 245, 255, 0.22);
+    box-shadow: 0 0 18px rgba(0,245,255,0.6), inset 0 0 12px rgba(0,245,255,0.1);
+    border-color: rgba(0,245,255,0.8);
+    transform: scale(0.95);
   }
 
-  .soft-btn { color: var(--green);   border-color: rgba(0,255,65,0.3); }
-  .soft-btn.pressed { background: rgba(0,255,65,0.15); box-shadow: 0 0 14px rgba(0,255,65,0.4); }
+  .soft-btn { color: var(--green);   border-color: rgba(0,255,65,0.4); }
+  .soft-btn:hover { background: rgba(0,60,20,0.9); border-color: rgba(0,255,65,0.6); }
+  .soft-btn.pressed { background: rgba(0,255,65,0.18); box-shadow: 0 0 18px rgba(0,255,65,0.5), inset 0 0 12px rgba(0,255,65,0.1); border-color: rgba(0,255,65,0.8); }
 
   .drop-btn {
     color: var(--yellow);
-    border-color: rgba(255,224,0,0.35);
-    height: 70px;
+    border-color: rgba(255,224,0,0.4);
+    height: 76px;
     font-size: 1.6rem;
   }
-  .drop-btn.pressed { background: rgba(255,224,0,0.15); box-shadow: 0 0 14px rgba(255,224,0,0.5); }
+  .drop-btn:hover { background: rgba(60,60,0,0.9); border-color: rgba(255,224,0,0.6); }
+  .drop-btn.pressed { background: rgba(255,224,0,0.18); box-shadow: 0 0 18px rgba(255,224,0,0.6), inset 0 0 12px rgba(255,224,0,0.1); border-color: rgba(255,224,0,0.8); }
 
-  .rot-btn  { width: 58px; height: 42px; font-size: 1.3rem; color: var(--magenta); border-color: rgba(204,0,255,0.3); }
-  .rot-btn.pressed { background: rgba(204,0,255,0.15); box-shadow: 0 0 12px rgba(204,0,255,0.4); }
+  .rot-btn { width: 62px; height: 48px; font-size: 1.3rem; color: var(--magenta); border-color: rgba(204,0,255,0.4); }
+  .rot-btn:hover { background: rgba(60,0,60,0.9); border-color: rgba(204,0,255,0.6); }
+  .rot-btn.pressed { background: rgba(204,0,255,0.18); box-shadow: 0 0 16px rgba(204,0,255,0.5), inset 0 0 12px rgba(204,0,255,0.1); border-color: rgba(204,0,255,0.8); }
 
-  .hold-btn { width: 50px; height: 36px; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--yellow); border-color: rgba(255,224,0,0.3); }
-  .hold-btn.pressed { background: rgba(255,224,0,0.12); }
-  .hold-btn.hold-used { opacity: 0.3; border-color: rgba(255,224,0,0.1); }
+  .hold-btn { width: 56px; height: 40px; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--yellow); border-color: rgba(255,224,0,0.4); }
+  .hold-btn:hover { background: rgba(60,60,0,0.85); border-color: rgba(255,224,0,0.6); }
+  .hold-btn.pressed { background: rgba(255,224,0,0.15); box-shadow: 0 0 14px rgba(255,224,0,0.4); border-color: rgba(255,224,0,0.7); }
+  .hold-btn.hold-used { opacity: 0.35; border-color: rgba(255,224,0,0.15); background: rgba(0,0,20,0.6); color: rgba(255,224,0,0.4); }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════

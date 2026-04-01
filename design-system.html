@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Neon - Design System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: linear-gradient(135deg, #08080f 0%, #0a0a17 100%),
+                        repeating-linear-gradient(
+                            90deg,
+                            transparent,
+                            transparent 40px,
+                            rgba(0, 245, 255, 0.025) 40px,
+                            rgba(0, 245, 255, 0.025) 80px
+                        );
+            color: #ddd;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid rgba(0, 245, 255, 0.25);
+            padding-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00f5ff;
+            text-shadow: 0 0 15px #00f5ff, 0 0 30px #00f5ff, 0 0 60px rgba(0, 245, 255, 0.4);
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(0, 245, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #cc00ff;
+            text-shadow: 0 0 12px #cc00ff, 0 0 30px #cc00ff;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-left: 4px solid #cc00ff;
+            padding-left: 1rem;
+        }
+
+        .subsection-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ff41;
+            text-shadow: 0 0 8px #00ff41;
+            margin: 1.5rem 0 1rem;
+            text-transform: uppercase;
+        }
+
+        /* Colors Grid */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .color-swatch {
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            background: rgba(0, 0, 20, 0.8);
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .color-swatch:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+        }
+
+        .color-sample {
+            width: 100%;
+            height: 120px;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .color-info {
+            padding: 1rem;
+        }
+
+        .color-name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #00f5ff;
+        }
+
+        .color-code {
+            font-size: 0.85rem;
+            color: rgba(221, 221, 221, 0.7);
+        }
+
+        .color-usage {
+            font-size: 0.75rem;
+            color: rgba(0, 245, 255, 0.5);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Tetrominoes Showcase */
+        .tetromino-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .tetromino-card {
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+            padding: 1.5rem;
+            background: rgba(0, 0, 20, 0.8);
+            text-align: center;
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.08);
+        }
+
+        .tetromino-piece {
+            display: grid;
+            grid-template-columns: repeat(4, 30px);
+            gap: 4px;
+            margin: 1rem auto;
+            justify-content: center;
+        }
+
+        .tetromino-block {
+            width: 30px;
+            height: 30px;
+            border-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .tetromino-name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 1rem;
+            text-transform: uppercase;
+        }
+
+        /* Typography Showcase */
+        .typography-showcase {
+            background: rgba(0, 0, 20, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.08);
+        }
+
+        .type-sample {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .type-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(0, 245, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .type-value {
+            font-size: 1rem;
+            color: rgba(221, 221, 221, 0.8);
+            margin-bottom: 0.3rem;
+        }
+
+        .type-stats {
+            font-size: 0.75rem;
+            color: rgba(0, 245, 255, 0.4);
+        }
+
+        .title-sample {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00f5ff;
+            text-shadow: 0 0 15px #00f5ff, 0 0 30px #00f5ff;
+            letter-spacing: 2px;
+            margin: 1rem 0;
+        }
+
+        .value-sample {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #00f5ff;
+            text-shadow: 0 0 12px #00f5ff, 0 0 30px #00f5ff, 0 0 60px rgba(0, 245, 255, 0.4);
+        }
+
+        .label-sample {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(0, 245, 255, 0.55);
+        }
+
+        /* Component Showcase */
+        .component-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .component-box {
+            background: rgba(0, 0, 20, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.25);
+            border-radius: 4px;
+            padding: 1.5rem;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .component-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #00f5ff;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+            padding-bottom: 0.5rem;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(0, 245, 255, 0.5);
+            border-radius: 4px;
+            background: rgba(0, 0, 20, 0.8);
+            color: #00f5ff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', Courier, monospace;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .button:hover {
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.4), inset 0 0 12px rgba(0, 245, 255, 0.1);
+            background: rgba(0, 245, 255, 0.05);
+        }
+
+        .button:active {
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        .button.primary {
+            border-color: #cc00ff;
+            color: #cc00ff;
+        }
+
+        .button.primary:hover {
+            box-shadow: 0 0 12px rgba(204, 0, 255, 0.4);
+        }
+
+        .input {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+            background: rgba(0, 0, 20, 0.9);
+            color: #ddd;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: rgba(0, 245, 255, 0.8);
+            box-shadow: 0 0 8px rgba(0, 245, 255, 0.2);
+        }
+
+        .panel-example {
+            border: 1px solid rgba(0, 245, 255, 0.25);
+            border-radius: 4px;
+            background: rgba(0, 0, 20, 0.75);
+            padding: 1rem;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 245, 255, 0.08);
+            margin-top: 1rem;
+        }
+
+        /* Animations Showcase */
+        .animation-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes blink {
+            0%, 45%, 100% {
+                opacity: 1;
+            }
+            50%, 95% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 12px rgba(0, 245, 255, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(0, 245, 255, 0.6);
+            }
+        }
+
+        .flicker-sample {
+            animation: flicker 3s infinite;
+        }
+
+        .blink-sample {
+            animation: blink 1.1s steps(1, end) infinite;
+        }
+
+        .pulse-sample {
+            animation: pulse 2s infinite;
+            display: inline-block;
+            padding: 1rem;
+            border: 1px solid rgba(0, 245, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        /* Grid & Spacing */
+        .spacing-guide {
+            background: rgba(0, 0, 20, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .spacing-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.1);
+        }
+
+        .spacing-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .spacing-label {
+            width: 100px;
+            font-weight: 700;
+            color: #00f5ff;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .spacing-box {
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px dashed rgba(0, 245, 255, 0.3);
+            border-radius: 2px;
+            padding: 0.5rem;
+            color: rgba(0, 245, 255, 0.7);
+            font-size: 0.8rem;
+        }
+
+        /* Breakpoints */
+        .breakpoint-guide {
+            background: rgba(0, 0, 20, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .breakpoint-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.1);
+        }
+
+        .breakpoint-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .breakpoint-label {
+            width: 120px;
+            font-weight: 700;
+            color: #ffe000;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .breakpoint-range {
+            flex: 1;
+            background: rgba(255, 224, 0, 0.1);
+            border: 1px solid rgba(255, 224, 0, 0.3);
+            border-radius: 2px;
+            padding: 0.75rem;
+            color: rgba(255, 224, 0, 0.8);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 245, 255, 0.2);
+            text-align: center;
+            color: rgba(0, 245, 255, 0.4);
+            font-size: 0.85rem;
+        }
+
+        .glow-test {
+            margin: 1.5rem 0;
+        }
+
+        .glow-example {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .glow-cyan {
+            color: #00f5ff;
+            text-shadow: 0 0 12px #00f5ff, 0 0 30px #00f5ff, 0 0 60px rgba(0, 245, 255, 0.4);
+        }
+
+        .glow-magenta {
+            color: #cc00ff;
+            text-shadow: 0 0 12px #cc00ff, 0 0 30px #cc00ff, 0 0 60px rgba(204, 0, 255, 0.4);
+        }
+
+        .glow-green {
+            color: #00ff41;
+            text-shadow: 0 0 12px #00ff41, 0 0 30px #00ff41, 0 0 60px rgba(0, 255, 65, 0.4);
+        }
+
+        .glow-yellow {
+            color: #ffe000;
+            text-shadow: 0 0 12px #ffe000, 0 0 30px #ffe000, 0 0 60px rgba(255, 224, 0, 0.4);
+        }
+
+        .glow-red {
+            color: #ff0040;
+            text-shadow: 0 0 12px #ff0040, 0 0 30px #ff0040, 0 0 60px rgba(255, 0, 64, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .color-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .component-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TETRIS NEON</h1>
+            <p class="subtitle">Design System & Component Library</p>
+        </header>
+
+        <!-- Color Palette Section -->
+        <section class="section">
+            <h2 class="section-title">Color Palette</h2>
+
+            <div class="subsection-title">Primary Colors</div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-sample" style="background-color: #00f5ff;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Cyan</div>
+                        <div class="color-code">#00f5ff</div>
+                        <div class="color-usage">Primary UI, borders, glow</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-sample" style="background-color: #cc00ff;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Magenta</div>
+                        <div class="color-code">#cc00ff</div>
+                        <div class="color-usage">Accent, highlights</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection-title">Neutral Colors</div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-sample" style="background-color: #08080f;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Background</div>
+                        <div class="color-code">#08080f</div>
+                        <div class="color-usage">Main background</div>
+                    </div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-sample" style="background-color: #ddd;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Text</div>
+                        <div class="color-code">#ddd</div>
+                        <div class="color-usage">Body text</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection-title">Tetromino Colors</div>
+            <div class="tetromino-grid">
+                <div class="tetromino-card">
+                    <div class="tetromino-name" style="color: #cc00ff;">T-Piece</div>
+                    <div style="font-size: 0.85rem; color: #cc00ff; text-shadow: 0 0 8px #cc00ff;">#cc00ff</div>
+                    <div class="tetromino-piece">
+                        <div style="background: transparent;"></div>
+                        <div class="tetromino-block" style="background: #cc00ff; box-shadow: 0 0 8px #cc00ff;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                    </div>
+                </div>
+                <div class="tetromino-card">
+                    <div class="tetromino-name" style="color: #ffe000;">O-Piece</div>
+                    <div style="font-size: 0.85rem; color: #ffe000; text-shadow: 0 0 8px #ffe000;">#ffe000</div>
+                    <div class="tetromino-piece">
+                        <div class="tetromino-block" style="background: #ffe000; box-shadow: 0 0 8px #ffe000;"></div>
+                        <div class="tetromino-block" style="background: #ffe000; box-shadow: 0 0 8px #ffe000;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                    </div>
+                </div>
+                <div class="tetromino-card">
+                    <div class="tetromino-name" style="color: #00ff41;">S-Piece</div>
+                    <div style="font-size: 0.85rem; color: #00ff41; text-shadow: 0 0 8px #00ff41;">#00ff41</div>
+                    <div class="tetromino-piece">
+                        <div style="background: transparent;"></div>
+                        <div class="tetromino-block" style="background: #00ff41; box-shadow: 0 0 8px #00ff41;"></div>
+                        <div class="tetromino-block" style="background: #00ff41; box-shadow: 0 0 8px #00ff41;"></div>
+                        <div style="background: transparent;"></div>
+                    </div>
+                </div>
+                <div class="tetromino-card">
+                    <div class="tetromino-name" style="color: #ff0040;">Z-Piece</div>
+                    <div style="font-size: 0.85rem; color: #ff0040; text-shadow: 0 0 8px #ff0040;">#ff0040</div>
+                    <div class="tetromino-piece">
+                        <div class="tetromino-block" style="background: #ff0040; box-shadow: 0 0 8px #ff0040;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                    </div>
+                </div>
+                <div class="tetromino-card">
+                    <div class="tetromino-name" style="color: #00f5ff;">I-Piece</div>
+                    <div style="font-size: 0.85rem; color: #00f5ff; text-shadow: 0 0 8px #00f5ff;">#00f5ff</div>
+                    <div class="tetromino-piece">
+                        <div class="tetromino-block" style="background: #00f5ff; box-shadow: 0 0 8px #00f5ff;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                    </div>
+                </div>
+                <div class="tetromino-card">
+                    <div class="tetromino-name" style="color: #0066ff;">J-Piece</div>
+                    <div style="font-size: 0.85rem; color: #0066ff; text-shadow: 0 0 8px #0066ff;">#0066ff</div>
+                    <div class="tetromino-piece">
+                        <div class="tetromino-block" style="background: #0066ff; box-shadow: 0 0 8px #0066ff;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                    </div>
+                </div>
+                <div class="tetromino-card">
+                    <div class="tetromino-name" style="color: #ff8800;">L-Piece</div>
+                    <div style="font-size: 0.85rem; color: #ff8800; text-shadow: 0 0 8px #ff8800;">#ff8800</div>
+                    <div class="tetromino-piece">
+                        <div style="background: transparent;"></div>
+                        <div style="background: transparent;"></div>
+                        <div class="tetromino-block" style="background: #ff8800; box-shadow: 0 0 8px #ff8800;"></div>
+                        <div style="background: transparent;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Glow Effects Section -->
+        <section class="section">
+            <h2 class="section-title">Glow Effects</h2>
+            <div class="glow-test">
+                <div class="glow-example glow-cyan">
+                    <strong>Cyan Glow</strong><br>
+                    <small>text-shadow: 0 0 12px, 0 0 30px, 0 0 60px</small>
+                </div>
+                <div class="glow-example glow-magenta">
+                    <strong>Magenta Glow</strong><br>
+                    <small>text-shadow: 0 0 12px, 0 0 30px, 0 0 60px</small>
+                </div>
+                <div class="glow-example glow-green">
+                    <strong>Green Glow</strong><br>
+                    <small>text-shadow: 0 0 12px, 0 0 30px, 0 0 60px</small>
+                </div>
+                <div class="glow-example glow-yellow">
+                    <strong>Yellow Glow</strong><br>
+                    <small>text-shadow: 0 0 12px, 0 0 30px, 0 0 60px</small>
+                </div>
+                <div class="glow-example glow-red">
+                    <strong>Red Glow</strong><br>
+                    <small>text-shadow: 0 0 12px, 0 0 30px, 0 0 60px</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography Section -->
+        <section class="section">
+            <h2 class="section-title">Typography</h2>
+            <p style="color: rgba(0, 245, 255, 0.6); margin-bottom: 1rem;">Font Family: <strong>Courier New, Courier, monospace</strong></p>
+
+            <div class="typography-showcase">
+                <div class="type-sample">
+                    <div class="type-label">Title (H1)</div>
+                    <div class="title-sample">TETRIS NEON</div>
+                    <div class="type-stats">Font Size: 2.5rem | Font Weight: 700 | Letter Spacing: 2px</div>
+                </div>
+
+                <div class="type-sample">
+                    <div class="type-label">Value (Stats)</div>
+                    <div class="value-sample">99,999</div>
+                    <div class="type-stats">Font Size: 1.4rem | Font Weight: 700</div>
+                </div>
+
+                <div class="type-sample">
+                    <div class="type-label">Label</div>
+                    <div class="label-sample">HIGH SCORE</div>
+                    <div class="type-stats">Font Size: 0.6rem | Font Weight: 400 | Letter Spacing: 0.2em | Text Transform: UPPERCASE</div>
+                </div>
+
+                <div class="type-sample">
+                    <div class="type-label">Button Text</div>
+                    <button class="button">Start Game</button>
+                    <div class="type-stats">Font Size: 0.8rem | Font Weight: 600 | Letter Spacing: 0.1em</div>
+                </div>
+
+                <div class="type-sample">
+                    <div class="type-label">Body Text</div>
+                    <p>This is regular body text. It uses a light gray color (#ddd) for readability on dark backgrounds.</p>
+                    <div class="type-stats">Font Size: 1rem | Line Height: 1.6 | Color: #ddd</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components Section -->
+        <section class="section">
+            <h2 class="section-title">Components</h2>
+
+            <div class="component-showcase">
+                <div class="component-box">
+                    <div class="component-title">Buttons</div>
+                    <button class="button">Primary</button>
+                    <button class="button primary">Secondary</button>
+                    <p style="font-size: 0.85rem; color: rgba(0, 245, 255, 0.5); margin-top: 1rem;">
+                        Padding: 0.5rem 1rem | Border Radius: 4px
+                    </p>
+                </div>
+
+                <div class="component-box">
+                    <div class="component-title">Input Fields</div>
+                    <input type="text" class="input" placeholder="Enter text...">
+                    <input type="number" class="input" placeholder="Enter number...">
+                </div>
+
+                <div class="component-box">
+                    <div class="component-title">Panels</div>
+                    <div class="panel-example">
+                        <div style="color: #00f5ff; text-shadow: 0 0 8px #00f5ff;">PANEL</div>
+                        <div style="font-size: 0.85rem; color: rgba(221, 221, 221, 0.7); margin-top: 0.5rem;">Border: 1px solid rgba(0, 245, 255, 0.25)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Animations Section -->
+        <section class="section">
+            <h2 class="section-title">Animations</h2>
+
+            <div class="animation-showcase">
+                <div class="component-box">
+                    <div class="component-title">Flicker</div>
+                    <div class="flicker-sample" style="padding: 1rem; text-align: center;">
+                        FLICKER EFFECT
+                    </div>
+                    <p style="font-size: 0.85rem; color: rgba(0, 245, 255, 0.5); margin-top: 1rem;">Duration: 3s | Infinite</p>
+                </div>
+
+                <div class="component-box">
+                    <div class="component-title">Blink</div>
+                    <div class="blink-sample" style="padding: 1rem; text-align: center;">
+                        BLINK EFFECT
+                    </div>
+                    <p style="font-size: 0.85rem; color: rgba(0, 245, 255, 0.5); margin-top: 1rem;">Duration: 1.1s | Infinite</p>
+                </div>
+
+                <div class="component-box">
+                    <div class="component-title">Pulse</div>
+                    <div class="pulse-sample">
+                        PULSE EFFECT
+                    </div>
+                    <p style="font-size: 0.85rem; color: rgba(0, 245, 255, 0.5); margin-top: 1rem;">Duration: 2s | Infinite</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing Section -->
+        <section class="section">
+            <h2 class="section-title">Spacing & Layout</h2>
+
+            <div class="spacing-guide">
+                <div class="spacing-row">
+                    <div class="spacing-label">XS</div>
+                    <div class="spacing-box" style="width: 10px;">0.25rem</div>
+                </div>
+                <div class="spacing-row">
+                    <div class="spacing-label">SM</div>
+                    <div class="spacing-box" style="width: 20px;">0.5rem</div>
+                </div>
+                <div class="spacing-row">
+                    <div class="spacing-label">MD</div>
+                    <div class="spacing-box" style="width: 40px;">1rem (16px)</div>
+                </div>
+                <div class="spacing-row">
+                    <div class="spacing-label">LG</div>
+                    <div class="spacing-box" style="width: 60px;">1.5rem</div>
+                </div>
+                <div class="spacing-row">
+                    <div class="spacing-label">XL</div>
+                    <div class="spacing-box" style="width: 80px;">2rem</div>
+                </div>
+                <div class="spacing-row">
+                    <div class="spacing-label">2XL</div>
+                    <div class="spacing-box" style="width: 120px;">3rem</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Breakpoints Section -->
+        <section class="section">
+            <h2 class="section-title">Responsive Breakpoints</h2>
+
+            <div class="breakpoint-guide">
+                <div class="breakpoint-row">
+                    <div class="breakpoint-label">Mobile</div>
+                    <div class="breakpoint-range">&lt; 600px (1-column layout, full-width canvas)</div>
+                </div>
+                <div class="breakpoint-row">
+                    <div class="breakpoint-label">Tablet</div>
+                    <div class="breakpoint-range">601px - 1024px (single column, top/bottom HUD)</div>
+                </div>
+                <div class="breakpoint-row">
+                    <div class="breakpoint-label">Desktop</div>
+                    <div class="breakpoint-range">≥ 1025px (3-column layout: sidebar - canvas - sidebar)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Notes -->
+        <section class="section">
+            <h2 class="section-title">Implementation Notes</h2>
+            <div class="typography-showcase">
+                <h3 style="color: #00ff41; margin-bottom: 1rem;">How to Use This Design System</h3>
+                
+                <p style="margin-bottom: 1rem;"><strong>1. Design Tokens:</strong> Reference <code style="background: rgba(0, 0, 0, 0.3); padding: 2px 6px; border-radius: 2px;">design-tokens.json</code> for all color, spacing, and typography values.</p>
+
+                <p style="margin-bottom: 1rem;"><strong>2. Neon Glow Effect:</strong> All text uses multi-layer text-shadow for the neon aesthetic. Layer colors at 12px, 30px, and 60px blur radius for depth.</p>
+
+                <p style="margin-bottom: 1rem;"><strong>3. Responsive Design:</strong> Mobile-first approach using <code style="background: rgba(0, 0, 0, 0.3); padding: 2px 6px; border-radius: 2px;">min-width</code> media queries. Test at 375px, 768px, and 1440px breakpoints.</p>
+
+                <p style="margin-bottom: 1rem;"><strong>4. Accessibility:</strong> Maintain WCAG 2.1 AA contrast ratios. Cyan (#00f5ff) text on dark background achieves 10:1 contrast.</p>
+
+                <p style="margin-bottom: 1rem;"><strong>5. Monospace Typography:</strong> Courier New creates a retro, sci-fi aesthetic consistent with the synthwave theme.</p>
+
+                <p><strong>6. Component Reusability:</strong> All UI components (buttons, panels, inputs) follow consistent padding, spacing, and border styling.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>Tetris Neon Design System v1.0 | Created April 2026 | Synthwave Neon Theme</p>
+            <p>For updates, refer to <code>design-tokens.json</code> and game source files</p>
+        </footer>
+    </div>
+</body>
+</html>
